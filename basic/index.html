@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>A Basic Promise</title>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+  <script src="../lib/jquery-1.9.1.js"></script>
+  <script src="../lib/rsvp.js"></script>
+  <script src="../lib/helpers.js"></script>
+  <script src="basic.js"></script>
+</head>
+<body>
+
+  <a href="https://github.com/tildeio/rsvp.js">RSVP.js</a> provides simple tools for organizing asynchronous code
+  (you should peruse the readme doc there first).
+  <h1>A Basic Promise</h1>
+  <button id="resolveBtn">Resolve</button>
+  <button id="rejectBtn">Reject</button>
+  <br/>
+  <div id="output"></div>
+  <p>
+    This illustrates a promise at its most basic.  Your promise wraps your async code in a function which
+    supplies <strong>resolve</strong> and <strong>reject</strong> parameters.  When your async code returns
+    in the correct way, you call <strong>resolve(someMsg)</strong>.  You supply someMsg - if you were
+    getting json, you'd probably return that.
+  </p>
+  <p>
+    If your async code errors, you call <strong>reject(someErrorMsg)</strong>, passing back error
+    info of your choosing.
+  </p>
+  <p>
+    Resolving or rejecting a promise results in a callback to <strong>then()</strong> which has takes
+    two functions as parameters, the first for the resolved case, and the second for the rejected case.
+  </p>
+  <p>
+    In this example, the async event is a button click.
+  </p>
+  <pre>
+    var promise = new <strong>RSVP.Promise</strong>(function(<strong>resolve, reject</strong>){
+
+      $(document).on("click", "#resolveBtn", function(){
+        reportStatus(promise)
+        <strong>resolve</strong>("resolving!")
+      });
+
+      $(document).on("click", "#rejectBtn", function(){
+        reportStatus(promise)
+        <strong>reject</strong>("rejecting!")
+      });
+    });
+
+    promise.<strong>then</strong>(
+      function(msg){
+        outputMsg("Then(resolved) Msg: " + msg)
+      },
+      function(err){
+        outputMsg("Then(rejected) Err: " + err)
+      }
+    )
+  </pre>
+  <p>
+    Try clicking the buttons multiple times.  Note that the then callbacks are not called.  This
+    is because once a promise is resolved or rejected, it remains in that state and no longer fires
+    callbacks.  You can, however, can then() multiple times as will be shown in the next example...
+  </p>
+
+
+  </p>
+</body>
+</html>

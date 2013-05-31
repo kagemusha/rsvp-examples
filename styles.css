@@ -1,0 +1,15 @@
+body{
+    padding: 30px 30px;
+}
+p {
+    width: 90%;
+}
+#output {
+    padding: 6px;
+    width: 90%;
+    height: 200px;
+    border: 1px solid blue
+}
+strong {
+    color: blue
+}

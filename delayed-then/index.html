@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    #output {
+      width: 90%;
+      height: 400px;
+      border: 1px solid blue
+    }
+  </style>
+  <title>Delayed Then</title>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+  <script src="../lib/jquery-1.9.1.js"></script>
+  <script src="../lib/rsvp.js"></script>
+  <script src="../lib/helpers.js"></script>
+  <script src="delayed.js"></script>
+</head>
+<body>
+
+
+  <h1>Delayed Then</h1>
+  <button id="resolveBtn">Resolve</button>
+  <button id="rejectBtn">Reject</button>
+  <button id="thenBtn">Then my promise!</button>
+  <br/>
+  <div id="output"></div>
+  <p>
+    In this example, <strong>then()</strong> isn't called until you hit the
+    <strong>Then my promise!</strong> button.
+  </p>
+
+  <pre>
+    var promise = new RSVP.Promise(function(resolve, reject){
+
+      $(document).on("click", "#resolveBtn", function(){
+        reportStatus(promise)
+        resolve("resolved")
+      });
+      $(document).on("click", "#rejectBtn", function(){
+        reportStatus(promise)
+        reject("rejected!")
+      });
+    });
+
+    $(document).on("click", "#thenBtn", function(){
+      promise.<strong>then</strong>(function(msg){
+          outputMsg("Then(resolved) Msg: " + msg)
+        },
+        function(err){
+          outputMsg("Then(rejected) Err: " + err)
+        })
+    })
+  </pre>
+
+  <p>
+    Note that the first time you hit the <strong>Resolve</strong> or
+    <strong>Reject</strong> buttons, nothing happens.  That's because our
+    <strong>reportStatus()</strong> method only outputs a message
+    if the promise is already resolved or rejected.  On a second click the
+    promise is in its terminal state when <strong>reportStatus()</strong> gets
+    called so it will output a message.
+  </p>
+  <p>
+    Also note that if you hit the <strong>Then</strong> button while the promise
+    is still pending, nothing happens, but after promise resolution, you can call
+    then to your heart's content and it will faithfully output the promise's result.
+  </p>
+</body>
+</html>
