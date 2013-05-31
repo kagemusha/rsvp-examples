@@ -1,7 +1,7 @@
 rsvp-examples
 =============
 
-Example usages of (rsvp promises)[https://github.com/tildeio/rsvp.js?source=c]
+Example usages of [rsvp.js promises](https://github.com/tildeio/rsvp.js?source=c)
 
 
 Running
