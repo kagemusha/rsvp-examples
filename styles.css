@@ -1,5 +1,5 @@
 body{
-    padding: 30px 30px;
+    padding: 10px 30px;
 }
 p {
     width: 90%;
@@ -8,6 +8,7 @@ p {
     padding: 6px;
     width: 90%;
     height: 200px;
+    margin-top: 10px;
     border: 1px solid blue
 }
 strong {

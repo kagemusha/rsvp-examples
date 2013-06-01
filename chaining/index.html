@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Chained Promises</title>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+  <script src="../lib/jquery-1.9.1.js"></script>
+  <script src="../lib/rsvp.js"></script>
+  <script src="../lib/helpers.js"></script>
+  <script src="chained.js"></script>
+</head>
+
+  <body>
+    <h1>Chained Promises</h1>
+    <label>Enter Key: </label>
+    <input type="text" id="lookupKey"/>
+    <button id="lookupBtn">Lookup Key</button>
+    <br/>
+    (Try entering key1, key2, rsvp)
+    <div id="output"></div>
+    <p>
+      Here we have a <strong>lookup</strong> method which return a promise.
+    </p>
+  <pre>
+  function lookup(field, key){
+    var lookupPromise = new <strong>RSVP.Promise</strong>(function(resolve, reject){
+      val = resources[field][key]
+      if (val) {
+        <strong>resolve</strong>(val);
+      } else {
+        <strong>reject</strong>("Val not found for: " + field + "["+ key + "]");
+      }
+    });
+    return lookupPromise;
+  }
+  </pre>
+    <p>Out data structure looks like:
+    </p>
+    <pre>
+      var resources = {
+         urls:   {key1: "resource1Url", key2: "resource2Url"},
+         content: {resource1Url: "resource1-content"}
+      }
+    </pre>
+    <p>
+      Clicking the button will cause a lookup with the inputted key. The
+      result of this is then passed to ta second lookup call.
+    </p>
+  <pre>
+  $(document).on("click", "#lookupBtn", function(){
+    key = $("#lookupKey").val()
+    <strong>lookup("urls", key ).then</strong>(function(url){
+      outputMsg("Found url " + url + " for key " + key )
+      return <strong>lookup("content", url)</strong>
+    }).<strong>then</strong>(function(content){
+      outputMsg("Found content: " + content );
+    }).<strong>then</strong>(null, function(errMsg){
+        outputMsg("Err Msg: " + errMsg);
+    })
+  });
+  </pre>
+    <p>
+      Look at the three <strong>then()</strong> calls.  The first two have a single function
+      parameter which get called if they are resolved in succession.  The third
+      call has a third then has a null resolution function and a rejected handler,
+      which gets called if <em>either</em> promise rejects.
+    </p>
+
+    <p>
+      Imagine a convention async method with success and failure handlers such as
+      <strong>lookup(successFn, failureFn)</strong>.  A succession of two call as
+      above would result in:
+  <pre>
+  lookup(key,
+    function success(data){
+      lookup(data,
+        function success(data){
+          ...  //success
+        },
+        function failure(err){
+          ... //failed on second call
+        }
+    },
+    function error(err){
+      ... //failed on first call
+    }
+   </pre>
+
+    <p>
+      The nesting here is hard to read.  Also note that for each additional lookup call
+      you will have to add both a success and failure method, whereas with promises you
+      call get by with only one additional <strong>then()</strong>.
+    </p>
+  </body>
+</html>
